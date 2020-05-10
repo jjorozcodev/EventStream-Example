@@ -2,8 +2,35 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<button onclick="initialize()" class="btn btn-primary">Click me!</button>
+
+<div id="targetDiv"></div>
+
+<script>
+
+    function initialize() {
+
+        if (window.EventSource == undefined) {
+            // If not supported
+            document.getElementById('targetDiv').innerHTML = "Your browser doesn't support Server Sent Events.";
+            return;
+        } else {
+            var source = new EventSource('../Home/SSE');
+
+            source.onopen = function (event) {
+                document.getElementById('targetDiv').innerHTML += 'Connection Opened.<br>';
+            };
+
+            source.onerror = function (event) {
+                if (event.eventPhase == EventSource.CLOSED) {
+                    document.getElementById('targetDiv').innerHTML += 'Connection Closed.<br>';
+                    source.close();
+                }
+            };
+
+            source.onmessage = function (event) {
+                document.getElementById('targetDiv').innerHTML += event.data + '<br>';
+            };
+        }
+    }
+</script> 
