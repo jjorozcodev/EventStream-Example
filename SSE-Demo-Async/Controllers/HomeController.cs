@@ -11,9 +11,12 @@ namespace SSE_Demo_Async.Controllers
             return View();
         }
 
-        public void SSE()
+        public async Task SSE(string name)
         {
             Response.ContentType = "text/event-stream";
+
+            Response.Write(string.Format("data: Connected at> {0}\n\n", DateTime.Now.ToString()));
+            Response.Flush();
 
             DateTime startDate = DateTime.Now;
             while (startDate.AddMinutes(1) > DateTime.Now)
@@ -23,10 +26,10 @@ namespace SSE_Demo_Async.Controllers
                     break;
                 }
 
-                Response.Write(string.Format("data: {0}\n\n", DateTime.Now.ToString()));
-                Response.Flush();
+                await PoolTimer.SyncEvent();
 
-                System.Threading.Thread.Sleep(3000);
+                Response.Write(string.Format("data: {0} Server time> {1}\n\n", name, DateTime.Now.ToString()));
+                Response.Flush();
             }
             
             Response.Close();

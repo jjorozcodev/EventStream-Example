@@ -2,6 +2,7 @@
     ViewBag.Title = "Home Page";
 }
 
+<input class="form-control" id="Name"/>
 <button onclick="initialize()" class="btn btn-primary">Click me!</button>
 
 <div id="targetDiv"></div>
@@ -15,7 +16,8 @@
             document.getElementById('targetDiv').innerHTML = "Your browser doesn't support Server Sent Events.";
             return;
         } else {
-            var source = new EventSource('../Home/SSE');
+            var n = $('#Name').val();
+            var source = new EventSource('../Home/SSE?name=' + n);
 
             source.onopen = function (event) {
                 document.getElementById('targetDiv').innerHTML += 'Connection Opened.<br>';
