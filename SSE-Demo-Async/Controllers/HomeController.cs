@@ -17,18 +17,17 @@ namespace SSE_Demo_Async.Controllers
 
             Response.Write(string.Format("data: Connected at> {0}\n\n", DateTime.Now.ToString()));
             Response.Flush();
-
-            DateTime startDate = DateTime.Now;
-            while (startDate.AddMinutes(1) > DateTime.Now)
+            
+            while (true)
             {
                 if (!Response.IsClientConnected)
                 {
                     break;
                 }
 
-                await PoolTimer.SyncEvent();
+                string resp = await PoolTimer.GetServerTime(name);
 
-                Response.Write(string.Format("data: {0} Server time> {1}\n\n", name, DateTime.Now.ToString()));
+                Response.Write(resp + "\n\n");
                 Response.Flush();
             }
             
