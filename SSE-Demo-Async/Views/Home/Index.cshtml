@@ -1,9 +1,11 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Event Stream";
 }
 
-<input class="form-control" id="Name"/>
-<button onclick="initialize()" class="btn btn-primary">Click me!</button>
+<div class="row mt-3">
+        <input id="Name" type="text" class="form-control" placeholder="Enter your name...">
+        <button onclick="initialize()" class="btn btn-primary" type="submit">Click me!</button>
+</div>
 
 <div id="targetDiv"></div>
 

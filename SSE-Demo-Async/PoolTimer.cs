@@ -5,29 +5,29 @@ namespace SSE_Demo_Async
 {
     public static class PoolTimer
     {
-        private static DateTime timeUpdated;
+        public static DateTime nextUpdate;
 
-        public static async Task<string> GetServerTime(string name)
+        static PoolTimer()
         {
-            string resp = string.Empty;
-            DateTime timeNow;
-
-            await Task.Run(() =>
+            Task.Run(() =>
             {
+                nextUpdate = DateTime.Now;
+                nextUpdate = nextUpdate.AddSeconds(60 - nextUpdate.Second);
+                nextUpdate = nextUpdate.AddMilliseconds(-nextUpdate.Millisecond);
+
                 while (true)
                 {
-                    timeNow = DateTime.Now;
+                    DateTime timeNow = DateTime.Now;
+                    timeNow = timeNow.AddMilliseconds(-timeNow.Millisecond);
 
-                    if ((timeNow.ToLongTimeString() != timeUpdated.ToLongTimeString()) && timeNow.Second % 5 == 0)
+                    if (timeNow.Second % 10 == 0 && timeNow.ToLongTimeString() == nextUpdate.ToLongTimeString())
                     {
-                        timeUpdated = timeNow;
-                        resp = "data: " + name + ", the server time is> " + timeUpdated.ToLongTimeString();
-                        break;
+                        nextUpdate = timeNow.AddSeconds(10);
+
+                        System.Diagnostics.Debug.WriteLine(nextUpdate.ToString("HH:mm:ss.fff") + " ... " + timeNow.ToString("HH:mm:ss.fff"));
                     }
                 }
             });
-
-            return resp;
-        }
+        }        
     }
 }
